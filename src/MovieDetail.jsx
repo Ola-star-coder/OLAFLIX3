@@ -83,7 +83,7 @@ const MovieDetail = ({ toggleBookmark, bookmarks = [] }) => {
   
       {trailers.length > 0 && (
         <div className='row-helper' style={{marginTop: '3rem'}}>
-            <h3>Trailers & Clips</h3>
+            <h2>Trailers & Clips</h2>
             <div className="row-container">
             {trailers.map(video => (
                 <div key={video.key} className="video-card">
@@ -102,7 +102,7 @@ const MovieDetail = ({ toggleBookmark, bookmarks = [] }) => {
 
       {similar.length > 0 && (
         <div className='row-helper'>
-            <h3>You May Also Like</h3>
+            <h2>You May Also Like</h2>
             <div className="row-container">
             {similar.map(m => (
                 <MovieCard 

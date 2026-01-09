@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import MovieCard from './MovieCard';
 
 const Bookmarks = ({ bookmarks = [], toggleBookmark, onSelect = () => {} }) => {
+  const navigate = useNavigate();
   return (
     <div className="bookmarks-page">
       {bookmarks.length === 0 ? (
@@ -9,7 +11,7 @@ const Bookmarks = ({ bookmarks = [], toggleBookmark, onSelect = () => {} }) => {
       ) : (
         <div className="container">
           {bookmarks.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} isBookmarked={true} toggleBookmark={toggleBookmark} onSelect={(id) => onSelect(id)} />
+            <MovieCard key={movie.id} movie={movie} isBookmarked={true} toggleBookmark={toggleBookmark} onSelect={() => navigate(`/movie/${movie.id}`)} />
           ))}
         </div>
       )}
