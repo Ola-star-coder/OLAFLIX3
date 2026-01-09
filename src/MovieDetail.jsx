@@ -72,7 +72,19 @@ const MovieDetail = ({ toggleBookmark, bookmarks = [] }) => {
             </button>
           </div>
 
-          <p className="hero-overview" style={{maxWidth:'680px'}}>{details.overview}</p>
+          {details.genres && (
+            <div className='genre-tacker'>
+                {details.genres.map(genre => (
+                    <span 
+                      key={genre.id} 
+                    >
+                      {genre.name}
+                    </span>
+                ))}
+            </div>
+          )}
+
+          <p className="hero-overview">{details.overview}</p>
 
           <div className="credits">
             <div><strong>Directed by:</strong> {director?.name || '—'}</div>
