@@ -1,8 +1,27 @@
 import React from "react";
 import { POSTER_BASE } from './api'; 
+import { useAuth } from "./context/authcontext";
+import toastr from 'toastr';
 
 const MovieCard = ({ movie, isBookmarked = false, toggleBookmark = () => {}, onSelect = () => {} }) => {
-  
+  const { user } = useAuth();
+
+  const handleBookmarkClick = (e) => {
+    e.stopPropagation();
+
+    if (!user) {
+        toastr.warning("Please sign in to save movies.", "Sign In Required");
+        return;
+    }
+
+    toggleBookmark(movie);
+    if (isBookmarked) {
+        toastr.info(`Removed ${movie.title} from library`);
+    } else {
+        toastr.success(`Added ${movie.title} to library`);
+    }
+  };
+
   return (
     <div className="movie-card" onClick={() => onSelect(movie)}>
       <div className="poster-container">
@@ -13,7 +32,7 @@ const MovieCard = ({ movie, isBookmarked = false, toggleBookmark = () => {}, onS
         />
         <button
           className={`bookmark-btn ${isBookmarked ? 'bookmarked' : ''}`}
-          onClick={(e) => { e.stopPropagation(); toggleBookmark(movie); }}
+          onClick={handleBookmarkClick}
           title={isBookmarked ? 'Remove from List' : 'Add to List'}
         >
           {isBookmarked ? '★ Bookmarked' : '☆ Bookmark'}

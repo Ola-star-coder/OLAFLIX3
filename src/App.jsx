@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import './App.css';
 import { API_BASE, API_KEY } from './api';
+
+// --- IMPORT THE AUTH PROVIDER ---
+import { AuthProvider } from "./context/authcontext";
 
 import Header from "./components/Header"; 
 import Sidebar from "./components/Sidebar";
@@ -44,9 +47,7 @@ const AppContent = () => {
     fetchGenres();
   }, []);
 
-
   return (
-    // sidebar and main content
     <div className="app">
       <Sidebar 
         menuOpen={menuOpen} 
@@ -77,9 +78,12 @@ const AppContent = () => {
 
 const App = () => {
     return (
-        <Router>
-            <AppContent />
-        </Router>
+        // --- THIS WRAPPER IS WHAT FIXES YOUR ERROR ---
+        <AuthProvider>
+            <Router>
+                <AppContent />
+            </Router>
+        </AuthProvider>
     )
 }
 

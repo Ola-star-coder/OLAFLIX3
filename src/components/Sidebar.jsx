@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/authcontext'; // Import Auth
 
-// Everything related to sidebar and its rendering, both in desktop and mobile
 const Sidebar = ({ menuOpen, setMenuOpen, genres, bookmarks, activeGenre }) => {
+  const { user, signInGoogle, logout } = useAuth(); // Get auth tools
+
   return (
     <>
       <div className={`sidebar ${menuOpen ? 'active' : ''}`}>
         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'1rem'}}>
             <h3 className="sidebar-title" style={{marginTop:'0.3em'}}>Genres</h3>
-            {/* This  button closes the sidebar, crarification: there are two close button */}
             <span className="close-btn" onClick={() => setMenuOpen(false)}>✕</span>
         </div>
 
@@ -25,6 +26,24 @@ const Sidebar = ({ menuOpen, setMenuOpen, genres, bookmarks, activeGenre }) => {
            <Link to="/bookmarks" onClick={() => setMenuOpen(false)}>
               <li>Bookmarks {bookmarks.length ? `(${bookmarks.length})` : ''}</li>
            </Link>
+        </ul>
+
+        <h3 className="sidebar-title" style={{marginTop: '2rem', color: '#fff'}}>Account</h3>
+        <ul className="genre-list">
+            {user ? (
+                <>
+                   <li style={{color: '#aaa', fontSize:'1rem', cursor:'default', fontWeight:'normal'}}>
+                        Hi, {user.displayName ? user.displayName.split(' ')[0] : 'Member'}
+                    </li>
+                    <li onClick={() => { logout(); setMenuOpen(false); }} style={{color: '#fff'}}>
+                        Sign Out
+                    </li>
+                </>
+            ) : (
+                <li onClick={() => { signInGoogle(); setMenuOpen(false); }} style={{color: '#fff'}}>
+                    Sign In
+                </li>
+            )}
         </ul>
 
          <h3 className="sidebar-title" style={{marginTop: '2rem', opacity: 0.5}}>LANGUAGE</h3>

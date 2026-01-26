@@ -7,13 +7,13 @@ const Header = ({ setMenuOpen }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();  
 
-  //Nothing fancy, just returning home without reload
+  // Return home without reload
   const goHome = () => {
     navigate('/');
     setMobileSearchOpen(false);
   };
 
-   // Handle search on Enter key press nothing fancy
+   // Handle search on Enter key press
   const handleSearch = (e) => {
     if (e.key === 'Enter' && searchTerm.trim() !== '') {
       navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
@@ -21,7 +21,6 @@ const Header = ({ setMenuOpen }) => {
     }
   };
   
-  //rendering
   return (
     <header className="header">
       <div className="desktop-header-content">
@@ -39,7 +38,7 @@ const Header = ({ setMenuOpen }) => {
         </div>
       </div>
       
-      {/* //mobile version */}
+      {/* Mobile Version */}
       <div className="mobile-header-content">
         {mobileSearchOpen ? (
           <div className="mobile-search-bar">
@@ -68,16 +67,17 @@ const Header = ({ setMenuOpen }) => {
                <div className="img-cover" onClick={() => setMobileSearchOpen(true)}>
                  <img src={SearchIcon} alt="search" width="22" />
                 </div> 
-                <div className="menu-icon" onClick={() => setMenuOpen(true)}><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="3" y1="12" x2="21" y2="12"></line>
-                  <line x1="3" y1="6" x2="21" y2="6"></line>
-                  <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg></div>
+                <div className="menu-icon" onClick={() => setMenuOpen(true)}>
+                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                  </svg>
+                </div>
             </div>
           </>
         )}
       </div>
-
     </header>
   );
 };
