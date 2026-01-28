@@ -3,7 +3,7 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import MovieCard from '../MovieCard';
 import { API_BASE, API_KEY } from '../api';
 
-const GenrePage = ({ toggleBookmark, bookmarks, isSearch = false }) => {
+const GenrePage = ({ isSearch = false }) => {
   const { genreId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -17,7 +17,6 @@ const GenrePage = ({ toggleBookmark, bookmarks, isSearch = false }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  // This resets when genre or search changes
   useEffect(() => {
     setMovies([]);
     setPage(1);
@@ -58,8 +57,6 @@ const GenrePage = ({ toggleBookmark, bookmarks, isSearch = false }) => {
           <MovieCard 
             key={movie.id} 
             movie={movie} 
-            isBookmarked={bookmarks.some(b => b.id === movie.id)} 
-            toggleBookmark={toggleBookmark} 
             onSelect={() => navigate(`/movie/${movie.id}`)} 
            />
         ))}

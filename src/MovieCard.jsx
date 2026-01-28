@@ -1,21 +1,25 @@
 import React from "react";
-import { POSTER_BASE } from './api'; 
+import { POSTER_BASE } from "./api";
 import { useAuth } from "./context/authcontext";
+import { useMovieContext } from "./context/Moviecontext";
 import toastr from 'toastr';
 
-const MovieCard = ({ movie, isBookmarked = false, toggleBookmark = () => {}, onSelect = () => {} }) => {
+const MovieCard = ({ movie, onSelect = () => {} }) => {
   const { user } = useAuth();
+  const { toggleBookmark, isBookmarked } = useMovieContext(); 
+  const isAdded = isBookmarked(movie.id); 
 
   const handleBookmarkClick = (e) => {
     e.stopPropagation();
 
     if (!user) {
-        toastr.warning("Please sign in to save movies.", "Sign In Required");
+        toastr.warning("Please sign in to bookmark movies.", "Sign In Required");
         return;
     }
 
     toggleBookmark(movie);
-    if (isBookmarked) {
+
+    if (isAdded) {
         toastr.info(`Removed ${movie.title} from library`);
     } else {
         toastr.success(`Added ${movie.title} to library`);
@@ -31,11 +35,11 @@ const MovieCard = ({ movie, isBookmarked = false, toggleBookmark = () => {}, onS
           loading="lazy"
         />
         <button
-          className={`bookmark-btn ${isBookmarked ? 'bookmarked' : ''}`}
+          className={`bookmark-btn ${isAdded ? 'bookmarked' : ''}`}
           onClick={handleBookmarkClick}
-          title={isBookmarked ? 'Remove from List' : 'Add to List'}
+          title={isAdded ? 'Remove from List' : 'Add to List'}
         >
-          {isBookmarked ? '★ Bookmarked' : '☆ Bookmark'}
+          {isAdded ? '★ Bookmarked' : '☆ Bookmark'}
         </button>
       </div>
       <div className="movie-info">

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import MovieCard from '../MovieCard';
 import { API_BASE, API_KEY, IMG_BASE } from '../api';
 
-const HomePage = ({ toggleBookmark, bookmarks }) => {
+const HomePage = () => {
   const [heroMovies, setHeroMovies] = useState([]); 
   const [currentSlide, setCurrentSlide] = useState(0); 
   const [trending, setTrending] = useState([]);
@@ -11,7 +11,6 @@ const HomePage = ({ toggleBookmark, bookmarks }) => {
   const [upcoming, setUpcoming] = useState([]);
   const navigate = useNavigate();
 
-  //This just fetches data like water(get the joke? fetch... water... never mind)
   const fetchCategory = async (endpoint, setter) => {
     try {
       const res = await fetch(`${API_BASE}${endpoint}?api_key=${API_KEY}&language=en-US&page=1`);
@@ -23,35 +22,27 @@ const HomePage = ({ toggleBookmark, bookmarks }) => {
   useEffect(() => {
     const loadData = async () => {
       try {
-       const heroResults = await fetch(`${API_BASE}/trending/movie/day?api_key=${API_KEY}&page=1`);
-       const heroData = await heroResults.json();
+        const heroResults = await fetch(`${API_BASE}/trending/movie/day?api_key=${API_KEY}&page=1`);
+        const heroData = await heroResults.json();
 
-       if(heroData.results){
-        setHeroMovies(heroData.results.slice(0, 20));
-       }
-
-        const trendRes = await fetch(`${API_BASE}/trending/movie/week?api_key=${API_KEY}&page=1`);
-        const trendData = await trendRes.json();
-        
-        if (trendData.results) {
-         setTrending(trendData.results);
+        if(heroData.results){
+         setHeroMovies(heroData.results.slice(0, 20));
         }
-        
-        fetchCategory('/movie/top_rated', setTopRated);
-        fetchCategory('/movie/upcoming', setUpcoming);
+
+         const trendRes = await fetch(`${API_BASE}/trending/movie/week?api_key=${API_KEY}&page=1`);
+         const trendData = await trendRes.json();
+         
+         if (trendData.results) {
+          setTrending(trendData.results);
+         }
+         
+         fetchCategory('/movie/top_rated', setTopRated);
+         fetchCategory('/movie/upcoming', setUpcoming);
       } catch (e) { console.error(e); }
     };
 
     loadData();
   }, []);
-
-  // useEffect(() => {
-  //   if (heroMovies.length === 0) return;
-  //   const interval = setInterval(() => {
-  //     setCurrentSlide((prev) => (prev === heroMovies.length - 1 ? 0 : prev + 1));
-  //   }, 10000); 
-  //   return () => clearInterval(interval);
-  // }, [heroMovies]);
 
   const nextSlide = (e) => {
     e && e.stopPropagation();
@@ -100,21 +91,21 @@ const HomePage = ({ toggleBookmark, bookmarks }) => {
       <div className="section-title"><h2>Trending This Week</h2></div>
       <div className="row-container">
         {trending.map(movie => (
-           <MovieCard key={movie.id} movie={movie} isBookmarked={bookmarks.some(b => b.id === movie.id)} toggleBookmark={toggleBookmark} onSelect={() => navigate(`/movie/${movie.id}`)} />
+           <MovieCard key={movie.id} movie={movie} onSelect={() => navigate(`/movie/${movie.id}`)} />
         ))}
       </div>
       
        <div className="section-title"><h2>Top Rated</h2></div>
       <div className="row-container">
         {topRated.map(movie => (
-           <MovieCard key={movie.id} movie={movie} isBookmarked={bookmarks.some(b => b.id === movie.id)} toggleBookmark={toggleBookmark} onSelect={() => navigate(`/movie/${movie.id}`)} />
+           <MovieCard key={movie.id} movie={movie} onSelect={() => navigate(`/movie/${movie.id}`)} />
         ))}
       </div>
 
       <div className="section-title"><h2>Upcoming Movies</h2></div>
       <div className="row-container">
         {upcoming.map(movie => (
-           <MovieCard key={movie.id} movie={movie} isBookmarked={bookmarks.some(b => b.id === movie.id)} toggleBookmark={toggleBookmark} onSelect={() => navigate(`/movie/${movie.id}`)} />
+           <MovieCard key={movie.id} movie={movie} onSelect={() => navigate(`/movie/${movie.id}`)} />
         ))}
       </div>
     </div>

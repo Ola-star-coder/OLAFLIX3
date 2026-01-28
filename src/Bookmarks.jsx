@@ -1,9 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MovieCard from './MovieCard';
+import { useMovieContext } from './context/Moviecontext';
 
-const Bookmarks = ({ bookmarks = [], toggleBookmark, onSelect = () => {} }) => {
+const Bookmarks = () => {
+  const { bookmarks } = useMovieContext(); // Get data from context
   const navigate = useNavigate();
+
   return (
     <div className="bookmarks-page">
       {bookmarks.length === 0 ? (
@@ -11,7 +14,8 @@ const Bookmarks = ({ bookmarks = [], toggleBookmark, onSelect = () => {} }) => {
       ) : (
         <div className="container">
           {bookmarks.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} isBookmarked={true} toggleBookmark={toggleBookmark} onSelect={() => navigate(`/movie/${movie.id}`)} />
+            // Notice how clean this component is now? No props drilling!
+            <MovieCard key={movie.id} movie={movie} onSelect={() => navigate(`/movie/${movie.id}`)} />
           ))}
         </div>
       )}

@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/authcontext'; // Import Auth
+import { useAuth } from '../context/authcontext';
+import { useMovieContext } from '../context/Moviecontext';
 
-const Sidebar = ({ menuOpen, setMenuOpen, genres, bookmarks, activeGenre }) => {
-  const { user, signInGoogle, logout } = useAuth(); // Get auth tools
+const Sidebar = ({ menuOpen, setMenuOpen, activeGenre }) => {
+  const { user, signInGoogle, logout } = useAuth(); 
+  const { genres, bookmarks } = useMovieContext(); 
 
   return (
     <>
@@ -32,16 +34,16 @@ const Sidebar = ({ menuOpen, setMenuOpen, genres, bookmarks, activeGenre }) => {
         <ul className="genre-list">
             {user ? (
                 <>
-                   <li style={{color: '#aaa', fontSize:'1rem', cursor:'default', fontWeight:'normal'}}>
+                    <li style={{color: '#ffffff', fontSize:'1rem', cursor:'default', fontWeight:'normal'}}>
                         Hi, {user.displayName ? user.displayName.split(' ')[0] : 'Member'}
                     </li>
-                    <li onClick={() => { logout(); setMenuOpen(false); }} style={{color: '#fff'}}>
+                    <li onClick={() => { logout(); setMenuOpen(false); }} style={{color: '#b3b3b3', cursor:'pointer'}}>
                         Sign Out
                     </li>
                 </>
             ) : (
-                <li onClick={() => { signInGoogle(); setMenuOpen(false); }} style={{color: '#fff'}}>
-                    Sign In
+                <li onClick={() => { signInGoogle(); setMenuOpen(false); }} style={{color: '#b3b3b3', cursor:'pointer'}}>
+                    Sign In 
                 </li>
             )}
         </ul>

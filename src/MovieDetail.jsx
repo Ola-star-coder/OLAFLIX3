@@ -2,17 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { API_BASE, API_KEY, POSTER_BASE } from './api';
 import MovieCard from './MovieCard';
+import toastr from 'toastr';
+import { useAuth } from './context/authcontext';
+import { useMovieContext } from './context/Moviecontext';
 
-const MovieDetail = ({ toggleBookmark, bookmarks = [] }) => {
+const MovieDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+  const { user } = useAuth();
+  const { toggleBookmark, isBookmarked } = useMovieContext();
+
   const [details, setDetails] = useState(null);
   const [credits, setCredits] = useState(null);
   const [videos, setVideos] = useState([]);
   const [similar, setSimilar] = useState([]);
   
-  const isBookmarked = details ? bookmarks.some(b => b.id === Number(id)) : false;
+  const isAdded = isBookmarked(id);
 
   useEffect(() => {
     if (!id) return;
@@ -39,6 +44,20 @@ const MovieDetail = ({ toggleBookmark, bookmarks = [] }) => {
     fetchAll();
   }, [id]);
 
+  const handleBookmarkClick = () => {
+      if (!user) {
+          toastr.warning("Please sign in to save movies.", "Sign In Required");
+          return;
+      }
+      toggleBookmark(details);
+      
+      if (isAdded) {
+          toastr.info(`Removed ${details.title} from library`);
+      } else {
+          toastr.success(`Added ${details.title} to library`);
+      }
+  };
+
   if (!details) return <div className="loading-spinner" style={{padding:'2rem'}}>Loading details...</div>;
 
   const director = credits?.crew?.find((m) => m.job === 'Director');
@@ -64,20 +83,18 @@ const MovieDetail = ({ toggleBookmark, bookmarks = [] }) => {
             <span>•</span>
             <span>{details.runtime ? `${details.runtime}m` : ''}</span>
             <button 
-                className={`bookmark-btn ${isBookmarked ? 'bookmarked' : ''}`} 
-                onClick={() => toggleBookmark(details)} 
+                className={`bookmark-btn ${isAdded ? 'bookmarked' : ''}`} 
+                onClick={handleBookmarkClick} 
                 style={{marginLeft: '12px', position: 'static'}}
             >
-                {isBookmarked ? '★' : '☆'}
+                {isAdded ? '★' : '☆'}
             </button>
           </div>
 
           {details.genres && (
             <div className='genre-tacker'>
                 {details.genres.map(genre => (
-                    <span 
-                      key={genre.id} 
-                    >
+                    <span key={genre.id}>
                       {genre.name}
                     </span>
                 ))}
@@ -111,7 +128,6 @@ const MovieDetail = ({ toggleBookmark, bookmarks = [] }) => {
         </div>
       )}
 
-
       {similar.length > 0 && (
         <div className='row-helper'>
             <h2>You May Also Like</h2>
@@ -120,8 +136,6 @@ const MovieDetail = ({ toggleBookmark, bookmarks = [] }) => {
                 <MovieCard 
                 key={m.id} 
                 movie={m} 
-                isBookmarked={bookmarks.some(b => b.id === m.id)} 
-                toggleBookmark={toggleBookmark} 
                 onSelect={() => navigate(`/movie/${m.id}`)} 
                 />
             ))}
